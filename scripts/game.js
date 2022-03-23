@@ -18,7 +18,7 @@ const Nums = Array.from(set);
 // for(const item in flags) {
 //     console.log(item);
 //     var img = document.createElement("img");
-//     img.src = "https://flagcdn.com/h240/"+ item +".png"
+//     img.src = "https://flagcdn.com/"+ item +".svg"
 //     document.getElementById("flag").appendChild(img);
 //     var g = document.createElement("div");
 //     g.innerHTML = flags[item];
@@ -28,7 +28,7 @@ const Nums = Array.from(set);
 let arr2 = [];
 for(let i = 0; i < 5; i++) {
     var img = document.createElement("img");
-    img.src = "https://flagcdn.com/h240/"+ arr[Nums[i]]+".png"
+    img.src = "https://flagcdn.com/"+ arr[Nums[i]]+".svg"
     arr2.push(img);
 }
 
