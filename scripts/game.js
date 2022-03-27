@@ -74,6 +74,7 @@ button.addEventListener("click", () => {
                 item.remove();
             });
             let finalScore = document.createElement("div");
+            finalScore.classList.add("final");
             finalScore.innerHTML = points + "/5";
             document.body.appendChild(finalScore);
 

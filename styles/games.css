@@ -3,7 +3,16 @@ html, body {
     margin: 0;
     min-height: 100vh;
 }
+#input {
+    padding-top: 15px;
+    text-align: center;
+}
 
+.scores {
+    display: flex;
+    font-size: 30px;
+    padding-left: 20px;
+}
 img {
     border: 1px solid black;
     height: 400px;
@@ -15,4 +24,14 @@ img {
     display: flex;
     justify-content: center;
     align-content: center;
+}
+
+.final {
+    text-align: center;
+    font-size: 50px;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
