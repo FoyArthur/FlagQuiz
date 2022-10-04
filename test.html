@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<head>
+<style>
+    img {
+    border: 1px solid black;
+    height: 400px;
+    width: 700px;
+    object-fit: cover;
+    }
+</style>
+</head>
+
+<body>
+    <div id="page">
+    <button id = "create">Create Room</button>
+    <form id="form">
+        <input id="name" autocomplete="off" placeholder="Name"/>
+        <br><br>
+        <input id="input" autocomplete="off" placeholder="Room Code"/>
+        <button id ="join">Join</button>
+    </form>
+    </div>
+    <script src="/socket.io/socket.io.js"> </script>
+    <script>
+        let socket = io();
+        let form = document.getElementById('form');
+        let input = document.getElementById('input');
+        let name = document.getElementById('name');
+        let create_button = document.getElementById('create');
+        let page = document.getElementById('page');
+        let player_name = "";
+        let move_no = 0;
+        form.addEventListener('submit', e => {
+            console.log(input.value, name.value);
+            player_name = name.value;
+            e.preventDefault();
+            socket.emit('join room', input.value, (message) => {
+                waitingRoom(message);
+            });
+        });
+
+        const score_map = new Map();
+        let score = 0;
+        
+        let answer = "";
+        create_button.addEventListener('click', e => {
+            // window.location.href = 'lobby';
+            player_name = name.value;
+            socket.emit('new room', (message) => {
+                waitingRoom(message);
+            });
+            
+            console.log('creating new room')
+        });
+
+        socket.on('message', (message) => {
+            console.log(message);
+        });
+
+        socket.on('game starting', () => {
+            page.innerHTML = "Game Starting in seconds";
+            move_no = 1;
+            answer = "";
+            score = 0;
+        });
+
+        socket.on("room invalid", () => {
+            let page = document.getElementById('page');
+            //page.innerHTML = page.innerHTML + "invalid code";
+        });
+        socket.on("game move", (flag, i, full_name) => {
+            page.innerHTML = '';
+            setTimeout(()=> {
+                page.innerHTML = '<div id="guess input"><form id="flag_submit"><input id="flag_guess" autocomplete="off"/><input type="submit" id ="submit" value="Submit"></form></div><img id="flag_img">';
+                document.getElementById('flag_guess').focus();
+                move_no++;
+
+                let img = document.getElementById("flag_img");
+                answer = full_name;
+                img.src = "https://flagcdn.com/"+ flag+".svg";
+                console.log(flag + full_name);
+            }, 1000);
+        });
+
+        socket.on("score update", (id, score) => {
+            console.log("score update " + id + " " + score)
+            score_map.set(id, score);
+        });
+
+        socket.on('game over', ()=> {
+            page.innerHTML = 'SCORE <div><ul id = "score_list"> </ul>';
+            score_map.forEach((element, element2) => {
+                let ul = document.getElementById('score_list');
+                let ele = document.createElement("li");
+                ele.innerHTML = element + " " + element2;
+                ul.appendChild(ele);
+            });
+        })
+       // let flag_submit = document.getElementById('flag_submit');
+        document.addEventListener('submit', e => {
+            if(e.target && e.target.id == 'flag_submit') {
+                e.preventDefault();
+                console.log("form submitted");
+                let text_input = document.getElementById('flag_guess');
+                if(text_input.value.toLowerCase() == answer.toLowerCase()) {
+                    score+=1;
+                }
+                socket.emit("answer given", score, player_name);
+                let div = document.getElementById('guess input');
+                div.innerHTML = '';
+            }
+        });
+
+        function startGame() {
+            socket.emit("start game");
+        }
+        
+        function waitingRoom(message) {
+            let page = document.getElementById('page');
+            page.innerHTML = message;
+        }
+    </script>
+</body>

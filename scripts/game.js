@@ -86,7 +86,7 @@ button.addEventListener("click", () => {
 
 
 
-
+  
 
 function generateFlag(num) {
     var img = document.createElement("img");

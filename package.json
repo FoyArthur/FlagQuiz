@@ -1,0 +1,8 @@
+{
+    "name": "flag-quiz",
+    "version": "0.0.1",
+    "description": "Multiplayer Flag guessing game",
+    "dependencies": {
+        "socket.io": "^4.5.1"
+    }
+}
